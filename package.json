@@ -1,0 +1,21 @@
+{
+  "name": "algorithm-visual",
+  "version": "1.0.0",
+  "description": "",
+  "main": "core/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [
+    "algorithm"
+  ],
+  "author": "Guo Chen",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.15.0",
+    "eslint-loader": "^1.6.1",
+    "webpack": "^2.2.1"
+  }
+}

@@ -1,0 +1,13 @@
+.Sidebar {
+  position: absolute;
+  left: 0;
+  top: 100px;
+}
+
+.Sidebar-module > h2 {
+  cursor: pointer;
+}
+
+.Sidebar-module-item > h3 {
+  cursor: pointer;
+}

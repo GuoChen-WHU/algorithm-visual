@@ -1,0 +1,16 @@
+.VisualArray {
+  position: absolute;
+  top: 150px;
+  left: 200px;
+}
+
+.VisualArray .container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+.VisualArray .container .item {
+  flex-basis: 10px;
+  background-color: #f00;
+}
