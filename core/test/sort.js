@@ -6,8 +6,8 @@
   var insertSort = alg.sort.insertSort;
 
   QUnit.test('can sort numbers', function (assert) {
-    var nums = [4, 6, 2, 1, 5, 3];
+    var nums = [7, 6, 2, 1, 5, 3];
     insertSort(nums);
-    assert.deepEqual(nums, [1, 2, 3, 4, 5, 6]);
+    assert.deepEqual(nums, [1, 2, 3, 5, 6, 7]);
   });
 }());

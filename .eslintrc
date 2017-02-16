@@ -5,8 +5,6 @@
   "amd": true
   },
 
-  "parser": "babel-eslint",
-
   "rules": {
   "array-bracket-spacing": [2],
   "block-scoped-var": 1,

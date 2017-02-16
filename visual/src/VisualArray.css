@@ -1,16 +1,30 @@
 .VisualArray {
-  position: absolute;
-  top: 150px;
-  left: 200px;
+  float: left;
+  padding: 30px;
 }
 
-.VisualArray .container {
+.container {
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
 }
 
-.VisualArray .container .item {
+.item {
   flex-basis: 10px;
   background-color: #f00;
+}
+
+.current {
+  background-color: #0f0;
+}
+
+.target {
+  position: relative;
+}
+
+.target:after {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  content: '\2191';
 }
