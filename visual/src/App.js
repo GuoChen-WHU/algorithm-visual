@@ -10,8 +10,10 @@ class App extends Component {
         <div className="App-header">
           <h2>Algorithm Visual</h2>
         </div>
-        <Sidebar />
-        <VisualArray />
+        <div className="App-body">
+          <Sidebar />
+          <VisualArray />
+        </div>
       </div>
     );
   }

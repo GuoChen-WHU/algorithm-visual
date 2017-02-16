@@ -1,13 +1,14 @@
 .Sidebar {
-  position: absolute;
-  left: 0;
-  top: 100px;
+  float: left;
+  height: 500px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
 }
 
-.Sidebar-module > h2 {
+h3 {
+  margin: 0;
   cursor: pointer;
-}
-
-.Sidebar-module-item > h3 {
-  cursor: pointer;
+  user-select: none;
 }

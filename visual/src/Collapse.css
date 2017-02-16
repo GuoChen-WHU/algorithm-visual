@@ -1,0 +1,29 @@
+.Collapse {
+  position: relative;
+  overflow: hidden;
+}
+
+.Collapse > h2 {
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.Collapse > h2:before {
+  content: '=';
+}
+
+.Collapse.collapsed > h2:before {
+  content: '+';
+}
+
+.items {
+  max-height: 100px;
+  padding-left: 10px;
+  /* hack: can not apply transition on height: auto, use max-height instead */
+  transition: max-height .5s ease-in-out;
+}
+
+.collapsed .items {
+  max-height: 0;
+}

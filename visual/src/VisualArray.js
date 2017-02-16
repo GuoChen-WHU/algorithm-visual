@@ -17,12 +17,12 @@ class VisualArray extends Component {
 
   handleInput(event) {
     var nums = event.target.value.split(' ');
-    this.setState({nums: nums.map((num) => parseInt(num, 10))});
+    this.setState({nums: nums});
   }
 
   handleStart(event) {
     var seq = [];
-    alg.sort.insertSort(this.state.nums, (curIdx, tarIdx, array) => seq.push([curIdx, tarIdx, array]));
+    alg.sort.insertSort(this.state.nums.map((num) => parseInt(num, 10)), (curIdx, tarIdx, array) => seq.push([curIdx, tarIdx, array]));
     this.startAnimation(seq);
   }
 
