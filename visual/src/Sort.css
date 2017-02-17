@@ -1,5 +1,27 @@
-.VisualArray {
+.Sort {
   width: 300px;
+}
+
+.Sort input {
+  width: 200px;
+  font-size: 16px;
+  line-height: 2;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+.Sort button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #337ab7;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.Sort button:hover {
+  background-color: #286090;
 }
 
 .container {

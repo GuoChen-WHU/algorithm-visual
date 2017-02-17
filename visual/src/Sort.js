@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './InsertSort.css';
+import './Sort.css';
 import alg from '../../core/algorithm.js';
 
-class InsertSort extends Component {
+class Sort extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,8 +21,12 @@ class InsertSort extends Component {
   }
 
   handleStart(event) {
-    var seq = [];
-    alg.sort.insertSort(this.state.nums.map((num) => parseInt(num, 10)), (curIdx, tarIdx, array) => seq.push([curIdx, tarIdx, array]));
+    var seq = [],
+        nums = this.state.nums.map((num) => parseInt(num, 10)),
+        cb = (curIdx, tarIdx, array) => seq.push([curIdx, tarIdx, array]);
+    if (this.props.type === 'insert') alg.sort.insertSort(nums, cb);
+    else if (this.props.type === 'bubble') alg.sort.bubbleSort(nums, cb);
+    else if (this.props.type === 'merge') alg.sort.mergeSort(nums, cb);
     this.startAnimation(seq);
   }
 
@@ -45,13 +49,17 @@ class InsertSort extends Component {
 
   render() {
     return (
-      <div className="InsertSort">
+      <div className="Sort">
         <input type="text" value={this.state.nums.join(' ')} onChange={this.handleInput} />
         <button type="button" onClick={this.handleStart}>Start</button>
         <div className="container">
           {this.state.nums.map((num, index) => {
-            var className = 'item' +
-                            (index === this.state.current ? ' current' : '') +
+            // For insert and bubble, current is a number, for merge, current is a array.
+            var isCurrent = Array.isArray(this.state.current)
+                          ? this.state.current.indexOf(index) > -1
+                          : index === this.state.current,
+                className = 'item' +
+                            (isCurrent ? ' current' : '') +
                             (index === this.state.target ? ' target' : '');
             return <div className={className} key={index} style={{height: num * 5 + 'px'}}></div>;
           })}
@@ -61,4 +69,4 @@ class InsertSort extends Component {
   }
 }
 
-export default InsertSort;
+export default Sort;
