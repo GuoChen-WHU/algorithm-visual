@@ -7,16 +7,13 @@ class Sidebar extends Component {
   render() {
     return (
       <div className="Sidebar">
-        <Collapse collapsed={false} title="Sort">
-          <h3>Insert Sort</h3>
-          <h3>Merge Sort</h3>
-          <h3>Quick Sort</h3>
-        </Collapse>
-        <Collapse collapsed={true} title="Heap">
-          <h3>Heapify</h3>
-          <h3>Build heap</h3>
-          <h3>Heap sort</h3>
-        </Collapse>
+        {Object.keys(this.props.items).map((catalog, index) =>
+          <Collapse key={catalog} collapsed={index === 0 ? false : true} title={catalog}>
+            {this.props.items[catalog].map((algorithm) =>
+              <h3 key={algorithm}>{algorithm}</h3>
+            )}
+          </Collapse>
+        )}
       </div>
     );
   }

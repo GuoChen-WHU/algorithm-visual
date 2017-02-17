@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './VisualArray.css';
+import './InsertSort.css';
 import alg from '../../core/algorithm.js';
 
-class VisualArray extends Component {
+class InsertSort extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,7 +45,7 @@ class VisualArray extends Component {
 
   render() {
     return (
-      <div className="VisualArray">
+      <div className="InsertSort">
         <input type="text" value={this.state.nums.join(' ')} onChange={this.handleInput} />
         <button type="button" onClick={this.handleStart}>Start</button>
         <div className="container">
@@ -61,4 +61,4 @@ class VisualArray extends Component {
   }
 }
 
-export default VisualArray;
+export default InsertSort;

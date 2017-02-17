@@ -1,18 +1,19 @@
 .VisualArray {
-  float: left;
   width: 300px;
-  padding: 30px;
 }
 
 .container {
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
+  width: 300px;
+  height: 300px;
 }
 
 .item {
   flex-basis: 10px;
   background-color: #f00;
+  transition: height .5s ease-in-out;
 }
 
 .current {
