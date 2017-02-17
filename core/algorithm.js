@@ -127,4 +127,47 @@
       }
     }
   };
+
+  alg.sort.quickSort = function (array, cb) {
+    if (!array.length) return;
+
+    cb = cb || function () {};
+
+    var p = 0,
+        r = array.length - 1;
+
+    quickSort(array, p, r, cb);
+  };
+
+  function quickSort (array, p, r, cb) {
+    if (p < r) {
+      q = partition(array, p, r);
+      cb(null, q, array.concat());
+      quickSort(array, p, q - 1, cb);
+      quickSort(array, q + 1, r, cb);
+    }
+  }
+
+  function partition (array, p, r) {
+    var random = Math.round(p + Math.random() * (r - p)),
+        pivot = array[random],
+        i,
+        j,
+        temp;
+
+    array[random] = array[r];
+    array[r] = pivot;
+
+    for (i = p - 1, j = p; j < r; j++) {
+      if (array[j] <= pivot) {
+        i++;
+        temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+      }
+    }
+    array[r] = array[i + 1];
+    array[i + 1] = pivot;
+    return i + 1;
+  }
 }());

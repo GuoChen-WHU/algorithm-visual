@@ -16,6 +16,9 @@ class Main extends Component {
       case 'merge sort':
         current = <Sort type="merge"/>;
         break;
+      case 'quick sort':
+        current = <Sort type="quick"/>;
+        break;
     }
     return (
       <div className="Main">

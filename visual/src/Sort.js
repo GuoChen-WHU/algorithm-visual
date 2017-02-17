@@ -6,28 +6,60 @@ class Sort extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nums: [5, 3, 6, 2, 4, 1],
+      nums: [50, 30, 25, 20, 40, 10],
       current: null,
       target: null
     };
-
-    this.handleInput = this.handleInput.bind(this);
-    this.handleStart = this.handleStart.bind(this);
+    this.timer = null;
   }
 
-  handleInput(event) {
+  handleInput = (event) => {
     var nums = event.target.value.split(' ');
     this.setState({nums: nums});
   }
 
-  handleStart(event) {
+  handleRandom = (event) => {
+    const minNum = 8,
+          maxNum = 16,
+          minVal = 5,
+          maxVal = 50;
+
+    var num = Math.round(minNum + Math.random() * (maxNum - minNum)),
+        result = [],
+        i;
+
+    for (i = 0; i < num; i++) {
+      result.push(Math.round(minVal + Math.random() * (maxVal - minVal)));
+    }
+
+    this.setState({nums: result});
+  }
+
+  handleStart = (event) => {
     var seq = [],
         nums = this.state.nums.map((num) => parseInt(num, 10)),
         cb = (curIdx, tarIdx, array) => seq.push([curIdx, tarIdx, array]);
-    if (this.props.type === 'insert') alg.sort.insertSort(nums, cb);
-    else if (this.props.type === 'bubble') alg.sort.bubbleSort(nums, cb);
-    else if (this.props.type === 'merge') alg.sort.mergeSort(nums, cb);
+
+    switch (this.props.type) {
+      case 'insert':
+      default:
+        alg.sort.insertSort(nums, cb);
+        break;
+      case 'bubble':
+        alg.sort.bubbleSort(nums, cb);
+        break;
+      case 'merge':
+        alg.sort.mergeSort(nums, cb);
+        break;
+      case 'quick':
+        alg.sort.quickSort(nums, cb);
+        break;
+    }
     this.startAnimation(seq);
+  }
+
+  handleStop = (event) => {
+    clearTimeout(this.timer);
   }
 
   startAnimation(seq) {
@@ -35,12 +67,12 @@ class Sort extends Component {
       var frame = seq.shift();
       if (frame) {
         this.setState({current: frame[0], target: frame[1]});
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           this.setState({nums: frame[2], current: frame[1]});
           if (seq.length) {
-            setTimeout(nextFrame.bind(this), 500);
+            this.timer = setTimeout(nextFrame.bind(this), 500);
           } else {
-            setTimeout(() => this.setState({current: null, target: null}), 500);
+            this.timer = setTimeout(() => this.setState({current: null, target: null}), 500);
           }
         }, 1000);
       }
@@ -51,7 +83,9 @@ class Sort extends Component {
     return (
       <div className="Sort">
         <input type="text" value={this.state.nums.join(' ')} onChange={this.handleInput} />
+        <button type="button" onClick={this.handleRandom}>Random</button>
         <button type="button" onClick={this.handleStart}>Start</button>
+        <button type="button" onClick={this.handleStop}>Stop</button>
         <div className="container">
           {this.state.nums.map((num, index) => {
             // For insert and bubble, current is a number, for merge, current is a array.

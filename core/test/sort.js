@@ -31,4 +31,14 @@
     assert.deepEqual(nums, [1, 2, 3, 4, 5, 6]);
   });
 
+  QUnit.module('quick sort');
+
+  var quickSort = alg.sort.quickSort;
+
+  QUnit.test('can sort numbers', function (assert) {
+    var nums = [6, 3, 4, 1, 2, 5];
+    quickSort(nums);
+    assert.deepEqual(nums, [1, 2, 3, 4, 5, 6]);
+  });
+
 }());

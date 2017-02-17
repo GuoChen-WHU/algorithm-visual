@@ -13,7 +13,8 @@ class App extends Component {
       Sort: [
         'insert sort',
         'merge sort',
-        'bubble sort'
+        'bubble sort',
+        'quick sort'
       ],
       Heap: [
         'heapify',
