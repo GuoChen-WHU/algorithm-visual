@@ -18,7 +18,7 @@
 }
 
 .items {
-  max-height: 100px;
+  max-height: 250px;
   padding-left: 10px;
   /* hack: can not apply transition on height: auto, use max-height instead */
   transition: max-height .5s ease-in-out;

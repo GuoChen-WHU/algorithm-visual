@@ -1,44 +1,52 @@
-(function () {
-  var root = this;
-
-  var alg = {};
-
-  if (typeof exports != 'undefined') {
-    if (typeof module != 'undefined' && module.exports) {
-      exports = module.exports = alg;
-    }
-  } else {
-    root.alg = alg;
-  }
++function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (factory((global.alg = global.alg || {})));
+}(this, (function (exports) { 'use strict';
 
   // Sort
   // --------------------
-  // receive a callback as parameter
+  // Each algorithm receive a callback as parameter for
+  // convinence of visualization.
 
-  alg.sort = {};
+  var sort = {};
 
-  alg.sort.insertSort = function (array, cb) {
+  sort.insert = function (array, cb, step) {
     if (!array.length) return;
 
     cb = cb || function () {};
+
+    step = step || 1;
 
     var len = array.length,
         i,
         j,
         key;
 
-    for (i = 0; i < len - 1; i++) {
-      key = array[i + 1];
-      for (j = i; j >= 0; j--) {
-        if (key < array[j]) array[j + 1] = array[j];
-        else break;
+    for (i = step; i < len; i++) {
+      key = array[i];
+      for (j = i - step; j >= 0 && array[j] > key; j -= step) {
+        array[j + step] = array[j];
       }
-      array[j + 1] = key;
-      cb(i + 1, j + 1, array.concat());
+      array[j + step] = key;
+      cb(i, j + step, array.concat());
     }
   };
 
-  alg.sort.mergeSort = function (array, cb) {
+  sort.shell = function (array, cb) {
+    if (!array.length) return;
+
+    cb = cb || function () {};
+
+    var step = array.length;
+
+    // /2 ensure the last step be 1
+    while (step = Math.floor(step / 2)) {
+      sort.insert(array, cb, step);
+    }
+  };
+
+  sort.merge = function (array, cb) {
     if (!array.length) return;
 
     cb = cb || function () {};
@@ -106,7 +114,7 @@
     return temp;
   }
 
-  alg.sort.bubbleSort = function (array, cb) {
+  sort.bubble = function (array, cb) {
     if (!array.length) return;
 
     cb = cb || function () {};
@@ -128,7 +136,32 @@
     }
   };
 
-  alg.sort.quickSort = function (array, cb) {
+  sort.select = function (array, cb) {
+    if (!array.length) return;
+
+    cb = cb || function () {};
+
+    var len = array.length,
+        min = Infinity,
+        minIdx,
+        i,
+        j;
+
+    for (i = 0; i < len; i++) {
+      for (j = i; j < len; j++) {
+        if (array[j] < min) {
+          min = array[j];
+          minIdx = j;
+        }
+      }
+      array[minIdx] = array[i];
+      array[i] = min;
+      cb(minIdx, i, array.concat());
+      min = Infinity;
+    }
+  };
+
+  sort.quick = function (array, cb) {
     if (!array.length) return;
 
     cb = cb || function () {};
@@ -141,7 +174,7 @@
 
   function quickSort (array, p, r, cb) {
     if (p < r) {
-      q = partition(array, p, r);
+      var q = partition(array, p, r);
       cb(null, q, array.concat());
       quickSort(array, p, q - 1, cb);
       quickSort(array, q + 1, r, cb);
@@ -170,4 +203,106 @@
     array[i + 1] = pivot;
     return i + 1;
   }
-}());
+
+  /**
+   * Count sort
+   *
+   * @param {Array} radix Origin array for radix sort.
+   *
+   */
+  sort.count = function (array, cb, radix) {
+    if (!array.length || Math.min.apply(null, array) < 0) return;
+
+    cb = cb || function () {};
+
+    var max = Math.max.apply(null, array),
+        len = array.length,
+        result = new Array(len),
+        count = new Array(max + 1),
+        i;
+
+    for (i = 0; i <= max; i++) {
+      count[i] = 0;
+    }
+    for (i = 0; i < len; i++) {
+      count[array[i]]++;
+      result[i] = radix ? radix[i] : array[i]; // need for visualization
+    }
+    for (i = 0; i < max; i++) {
+      count[i + 1] += count[i];
+    }
+    for (i = len - 1; i >= 0; i--) {
+      result[count[array[i]] - 1] = radix ? radix[i] : array[i];
+      cb(i, count[array[i]] - 1, result.concat());
+      count[array[i]]--;
+    }
+    for (i = len - 1; i >= 0; i--) {
+      radix ? (radix[i] = result[i]) : (array[i] = result[i]);
+    }
+  };
+
+  sort.radix = function (array, cb) {
+    if (!array.length || Math.min.apply(null, array) < 0) return;
+
+    cb = cb || function () {};
+
+    var max = Math.max.apply(null, array),
+        d = String(max).length,
+        digs = [],
+        i;
+
+    for (i = 0; i < d; i++) {
+      digs = getDigitsAt(array, i);
+      sort.count(digs, cb, array);
+    }
+
+  };
+
+  /**
+   * Get kth digit of nums (from right to left)
+   *
+   */
+  function getDigitsAt (array, k) {
+    var ret = [],
+        str,
+        dig;
+    for (var i = 0, len = array.length; i < len; i++) {
+      str = String(array[i]);
+      dig = str.length - 1 - k < 0 ? 0 : str[str.length - 1 - k];
+      ret.push(parseInt(dig));
+    }
+    return ret;
+  }
+
+  sort.bucket = function (array, cb) {
+    if (!array.length) return;
+
+    cb = cb || function () {};
+
+    var len = array.length,
+        min = Math.min.apply(null, array),
+        // + 1 to let the maximum fall in the last bucket
+        max = Math.max.apply(null, array) + 1,
+        size = (max - min) / len,
+        buckets = new Array(len),
+        result = [],
+        i;
+
+    for (i = 0; i < len; i++) {
+      buckets[i] = [];
+    }
+    for (i = 0; i < len; i++) {
+      buckets[Math.floor((array[i] - min) / size)].push(array[i]);
+    }
+    for (i = 0; i < len; i++) {
+      sort.insert(buckets[i]);
+      result = result.concat(buckets[i]);
+    }
+    for (i = 0; i < len; i++) {
+      array[i] = result[i];
+    }
+  };
+
+  // exports
+  exports.sort = sort;
+}));

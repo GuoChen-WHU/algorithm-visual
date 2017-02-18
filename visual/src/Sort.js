@@ -40,21 +40,7 @@ class Sort extends Component {
         nums = this.state.nums.map((num) => parseInt(num, 10)),
         cb = (curIdx, tarIdx, array) => seq.push([curIdx, tarIdx, array]);
 
-    switch (this.props.type) {
-      case 'insert':
-      default:
-        alg.sort.insertSort(nums, cb);
-        break;
-      case 'bubble':
-        alg.sort.bubbleSort(nums, cb);
-        break;
-      case 'merge':
-        alg.sort.mergeSort(nums, cb);
-        break;
-      case 'quick':
-        alg.sort.quickSort(nums, cb);
-        break;
-    }
+    alg.sort[this.props.type](nums, cb);
     this.startAnimation(seq);
   }
 

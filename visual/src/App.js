@@ -12,9 +12,14 @@ class App extends Component {
     this.algorithms = {
       Sort: [
         'insert sort',
+        'shell sort',
         'merge sort',
         'bubble sort',
-        'quick sort'
+        'select sort',
+        'quick sort',
+        'count sort',
+        'radix sort',
+        'bucket sort'
       ],
       Heap: [
         'heapify',
