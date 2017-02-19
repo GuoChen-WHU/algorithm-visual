@@ -7,7 +7,6 @@ class Main extends Component {
     var current;
     switch(this.props.current) {
       case 'insert sort':
-      default:
         current = <Sort type="insert"/>;
         break;
       case 'shell sort':
@@ -33,6 +32,9 @@ class Main extends Component {
         break;
       case 'bucket sort':
         current = <Sort type="bucket"/>;
+        break;
+      default:
+        current = '';
         break;
     }
     return (

@@ -27,17 +27,25 @@
   display: flex;
   justify-content: space-around;
   align-items: flex-end;
-  width: 300px;
+  width: 500px;
   height: 300px;
 }
 
 .item {
-  flex-basis: 10px;
+  flex-basis: 15px;
+  text-align: center;
+}
+
+.pillar {
   background-color: #f00;
   transition: height .5s ease-in-out;
 }
 
-.current {
+.index {
+  font-size: 8px;
+}
+
+.current .pillar {
   background-color: #0f0;
 }
 
@@ -47,7 +55,11 @@
 
 .target:after {
   position: absolute;
-  left: 0;
+  left: 25%;
   top: 100%;
   content: '\2191';
+}
+
+.note {
+  margin-top: 15px;
 }

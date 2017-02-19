@@ -29,7 +29,7 @@
         array[j + step] = array[j];
       }
       array[j + step] = key;
-      cb(i, j + step, array.concat());
+      cb(i, j + step, array.concat(), step);
     }
   };
 
@@ -174,14 +174,13 @@
 
   function quickSort (array, p, r, cb) {
     if (p < r) {
-      var q = partition(array, p, r);
-      cb(null, q, array.concat());
+      var q = partition(array, p, r, cb);
       quickSort(array, p, q - 1, cb);
       quickSort(array, q + 1, r, cb);
     }
   }
 
-  function partition (array, p, r) {
+  function partition (array, p, r, cb) {
     var random = Math.round(p + Math.random() * (r - p)),
         pivot = array[random],
         i,
@@ -201,6 +200,7 @@
     }
     array[r] = array[i + 1];
     array[i + 1] = pivot;
+    cb(random, i + 1, array.concat());
     return i + 1;
   }
 
