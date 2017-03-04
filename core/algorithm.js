@@ -4,6 +4,15 @@
   (factory((global.alg = global.alg || {})));
 }(this, (function (exports) { 'use strict';
 
+  // Util
+  // --------------------
+
+  function swap (array, i, j) {
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+
   // Sort
   // --------------------
   // Each algorithm receive a callback as parameter for
@@ -181,6 +190,8 @@
   }
 
   function partition (array, p, r, cb) {
+    cb = cb || function () {};
+
     var random = Math.round(p + Math.random() * (r - p)),
         pivot = array[random],
         i,
@@ -303,6 +314,87 @@
     }
   };
 
+
+  // Heap
+  // --------------------
+  var Heap = function (array) {
+    this.elements = array;
+  };
+
+  Heap.prototype.size = function () {
+    return this.elements.length;
+  };
+
+  Heap.prototype.leftChild = function (i) {
+    return i * 2 + 1;
+  };
+
+  Heap.prototype.rightChild = function (i) {
+    return i * 2 + 2;
+  };
+
+  Heap.prototype.parent = function (i) {
+    return i <= 0 ? undefined : Math.floor((i - 1 )/ 2);
+  };
+
+  Heap.prototype.maxHeapify = function (i) {
+    var left = this.leftChild(i),
+        right = this.rightChild(i),
+        largest = i;
+
+    if (this.elements[left] > this.elements[i]) largest = left;
+    if (this.elements[right] > this.elements[largest]) largest = right;
+    if (largest !== i) {
+      swap(this.elements, largest, i);
+      this.maxHeapify(largest);
+    }
+  };
+
+  Heap.prototype.buildMaxHeap = function () {
+    var size = this.size(),
+        i = Math.floor((size - 2) / 2);
+
+    for (; i >= 0; i--) {
+      this.maxHeapify(i);
+    }
+  };
+
+  Heap.prototype.heapSort = function () {
+    var result = [],
+        i = this.size() - 1;
+    this.buildMaxHeap();
+
+    for (; i > 0; i--) {
+      swap(this.elements, 0, i);
+      result.unshift(this.elements.pop());
+      this.maxHeapify(0);
+    }
+    result.unshift(this.elements[0]);
+    this.elements = result;
+  };
+
+  // Select
+  // ------------------
+  var randomSelect = function (array, i) {
+    var p = 0,
+        r = array.length - 1;
+    return _randomSelect(array, p, r, i);
+  };
+
+  var _randomSelect = function (array, p, r, i) {
+    if (p === r) return array[p];
+
+    var q = partition(array, p, r),
+        k = q - p + 1;
+
+    if (i === k) return array[q];
+    else if (i > k) return _randomSelect(array, q + 1, r, i - k);
+    else return _randomSelect(array, p, q - 1, i);
+  };
+
   // exports
   exports.sort = sort;
+  exports.Heap = Heap;
+  exports.randomSelect = randomSelect;
+
 }));
