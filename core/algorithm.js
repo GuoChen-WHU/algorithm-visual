@@ -392,9 +392,156 @@
     else return _randomSelect(array, p, q - 1, i);
   };
 
+
+  // Binary search tree
+  // ------------------
+  var Node = function (key) {
+    this.key = key;
+    this.left = null;
+    this.right = null;
+    this.parent = null;
+  };
+
+  var BST = function () {
+    this.root = null;
+  };
+
+  BST.prototype.insert = function (key) {
+    // y always point to parent of x
+    var y = null,
+        x = this.root,
+        node = new Node(key);
+
+    while (x !== null) {
+      y = x;
+      if (x.key > key)
+        x = x.left;
+      else x = x.right;
+    }
+    node.parent = y;
+    if (y === null) { // tree is empty
+      this.root = node;
+    } else if (key < y.key) {
+      y.left = node;
+    } else {
+      y.right = node;
+    }
+  };
+
+  BST.prototype.search = function (key) {
+    return _binarySearch(this.root, key);
+  };
+
+  var _binarySearch = function (root, key) {
+    if (root === null || root.key === key) return root;
+    if (root.key < key)
+      return _binarySearch(root.right, key);
+    else return _binarySearch(root.left, key);
+  };
+
+  BST.prototype.inorderWalk = function () {
+    var result = [];
+    _inorderWalk(this.root, result);
+    return result;
+  };
+
+  var _inorderWalk = function (root, result) {
+    if (root !== null) {
+      _inorderWalk(root.left, result);
+      result.push(root.key);
+      _inorderWalk(root.right, result);
+    }
+  };
+
+  BST.prototype.min = function (root) {
+    while (root && root.left) {
+      root = root.left;
+    }
+    return root;
+  };
+
+  BST.prototype.max = function (root) {
+    while (root && root.right) {
+      root = root.right;
+    }
+    return root;
+  };
+
+  BST.prototype.successor = function (key) {
+    var node = this.search(key),
+        y;
+    if (node.right) return this.min(node.right);
+    if (node.parent) {
+      y = node.parent;
+      while (y) {
+        if (y.left === node)
+          return y;
+        else {
+          node = y;
+          y = y.parent;
+        }
+      }
+    }
+    return null;
+  };
+
+  BST.prototype.predecessor = function (key) {
+    var node = this.search(key),
+        y;
+    if (node.left) return this.max(node.left);
+    if (node.parent) {
+      y = node.parent;
+      while (y) {
+        if (y.right === node)
+          return y;
+        else {
+          node = y;
+          y = y.parent;
+        }
+      }
+    }
+    return null;
+  };
+
+  BST.prototype.transplant = function (u, v) {
+    if (u === this.root) {
+      this.root = v;
+    } else if (u === u.parent.left) {
+      u.parent.left = v;
+    } else {
+      u.parent.right = v;
+    }
+    if (v) {
+      v.p = u.p;
+    }
+  };
+
+  // *hard
+  BST.prototype.delete = function (key) {
+    var node = this.search(key),
+        y;
+
+    // if only one child, use the child to replace it
+    if (!node.left) this.transplant(node, node.right);
+    else if (!node.right) this.transplant(node, node.left);
+
+    else {
+      y = this.successor(key);
+      if (y.parent !== node) {
+        this.transplant(y, y.right);
+        y.right = node.right;
+        y.right.parent = y;
+      }
+      this.transplant(node, y);
+      y.left = node.left;
+      y.left.parent = y;
+    }
+  };
+
   // exports
   exports.sort = sort;
   exports.Heap = Heap;
   exports.randomSelect = randomSelect;
+  exports.BST = BST;
 
 }));
