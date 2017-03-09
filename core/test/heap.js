@@ -2,7 +2,7 @@
 
   QUnit.module('heap sort');
 
-  QUnit.test('can sort numbers', function(assert) {
+  QUnit.test('works on numbers', function(assert) {
     var nums = [6, 3, 4, 1, 2, 5],
         heap = new alg.Heap(nums);
 

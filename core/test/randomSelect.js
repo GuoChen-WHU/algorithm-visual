@@ -1,7 +1,9 @@
 +function () {
+  'use strict';
+
   QUnit.module('random select');
 
-  QUnit.test('can select right order num', function (assert) {
+  QUnit.test('works on numbers', function (assert) {
     var nums = [6, 3, 4, 1, 2, 5],
         target = alg.randomSelect(nums, 3);
 
