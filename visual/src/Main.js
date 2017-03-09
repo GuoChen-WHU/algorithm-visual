@@ -1,49 +1,51 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import Sort from './Sort.js';
 import './Main.css';
 
-class Main extends Component {
-  render() {
-    var current;
-    switch(this.props.current) {
-      case 'insert sort':
-        current = <Sort type="insert"/>;
-        break;
-      case 'shell sort':
-        current = <Sort type="shell"/>;
-        break;
-      case 'bubble sort':
-        current = <Sort type="bubble"/>;
-        break;
-      case 'select sort':
-        current = <Sort type="select"/>;
-        break;
-      case 'merge sort':
-        current = <Sort type="merge"/>;
-        break;
-      case 'quick sort':
-        current = <Sort type="quick"/>;
-        break;
-      case 'count sort':
-        current = <Sort type="count"/>;
-        break;
-      case 'radix sort':
-        current = <Sort type="radix"/>;
-        break;
-      case 'bucket sort':
-        current = <Sort type="bucket"/>;
-        break;
-      default:
-        current = '';
-        break;
-    }
-    return (
-      <div className="Main">
-        <h2>{this.props.current.toUpperCase()}</h2>
-        {current}
-      </div>
-    );
+const Main = ({ current }) => {
+  var stage;
+  switch(current) {
+    case 'insert sort':
+      stage = <Sort type="insert"/>;
+      break;
+    case 'shell sort':
+      stage = <Sort type="shell"/>;
+      break;
+    case 'bubble sort':
+      stage = <Sort type="bubble"/>;
+      break;
+    case 'select sort':
+      stage = <Sort type="select"/>;
+      break;
+    case 'merge sort':
+      stage = <Sort type="merge"/>;
+      break;
+    case 'quick sort':
+      stage = <Sort type="quick"/>;
+      break;
+    case 'count sort':
+      stage = <Sort type="count"/>;
+      break;
+    case 'radix sort':
+      stage = <Sort type="radix"/>;
+      break;
+    case 'bucket sort':
+      stage = <Sort type="bucket"/>;
+      break;
+    default:
+      stage = null;
+      break;
   }
-}
+  return (
+    <div className="Main">
+      <h2>{current.toUpperCase()}</h2>
+      {stage}
+    </div>
+  );
+};
+
+Main.propTypes = {
+  current: PropTypes.string
+};
 
 export default Main;

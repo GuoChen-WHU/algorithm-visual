@@ -1,22 +1,22 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import './Sidebar.css';
 import Collapse from './Collapse.js';
 
-class Sidebar extends Component {
-
-  render() {
-    return (
-      <div className="Sidebar">
-        {Object.keys(this.props.items).map((catalog, index) =>
-          <Collapse key={catalog} collapsed={index === 0 ? false : true} title={catalog}>
-            {this.props.items[catalog].map((algorithm) =>
-              <h3 key={algorithm}>{algorithm}</h3>
-            )}
-          </Collapse>
+const Sidebar = ({ items, onAlgChange }) => (
+  <div className="Sidebar">
+    {Object.keys(items).map((catalog, index) =>
+      <Collapse key={catalog} collapsed={index === 0 ? false : true} title={catalog}>
+        {items[catalog].map((algorithm) =>
+          <h3 className="alg-title" key={algorithm} onClick={() => onAlgChange(algorithm)}>{algorithm}</h3>
         )}
-      </div>
-    );
-  }
-}
+      </Collapse>
+    )}
+  </div>
+);
+
+Sidebar.propTypes = {
+  items: PropTypes.object,
+  onAlgChange: PropTypes.func
+};
 
 export default Sidebar;

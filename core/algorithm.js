@@ -538,6 +538,90 @@
     }
   };
 
+
+  // red-black tree
+  // ---------------------
+
+  var BLACK = 0,
+      RED = 1;
+
+  var nil = {
+    color: BLACK
+  };
+
+  var rbtNode = function (key, color) {
+    this.key = key;
+    this.color = color;
+    this.left = nil;
+    this.right = nil;
+    this.parent = nil;
+  };
+
+  var RBT = function () {
+    this.root = nil;
+  };
+
+  RBT.prototype.leftRotate = function (x) {
+    var y = x.right;
+
+    // turns y's left subtree into x's right subtree
+    x.right = y.left;
+    if (y.left !== nil) y.left.parent = x;
+
+    // link x's parent to y
+    y.parent = x.parent;
+    if (x.parent = nil) this.root = y;
+    else if (x === x.parent.left)
+      x.parent.left = y;
+    else x.parent.right = y;
+
+    // put x on y's left
+    y.left = x;
+    x.parent = y;
+  };
+
+  RBT.prototype.rightRotate = function (y) {
+    var x = y.left;
+
+    y.left = x.right;
+    if (x.right !== nil) x.right.parent = y;
+
+    x.parent = y.parent;
+    if (y.parent = nil) this.root = x;
+    else if (y === y.parent.left)
+      y.parent.left = x;
+    else y.parent.right = x;
+
+    x.right = y;
+    y.parent = x;
+  };
+
+  RBT.prototype.insert = function (key) {
+    var z = new rbtNode(key, RED),
+        y = nil,
+        x = this.root;
+
+    while (x !== nil) {
+      y = x;
+      if (x.key < key)
+        x = x.right;
+      else x = x.left;
+    }
+
+    z.parent = y;
+    if (y === nil)
+      this.root = z;
+    else if (key < y.key)
+      y.left = z;
+    else y.right = z;
+
+    this.insertFixup(z);
+  };
+
+  RBT.prototype.insertFixup = function (z) {
+
+  };
+
   // exports
   exports.sort = sort;
   exports.Heap = Heap;

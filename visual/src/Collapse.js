@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import './Collapse.css';
 
 class Collapse extends Component {
@@ -16,12 +16,21 @@ class Collapse extends Component {
     return (
       <div className={'Collapse' + (this.state.collapsed ? ' collapsed' : '')}>
         <h2 onClick={this.handleClick}>{this.props.title}</h2>
-        <div className="items">
+        <div className="content">
           {this.props.children}
         </div>
       </div>
     );
   }
 }
+
+Collapse.propTypes = {
+  title: PropTypes.string,
+  collapsed: PropTypes.bool
+};
+
+Collapse.defaultProps = {
+  collapsed: true
+};
 
 export default Collapse;

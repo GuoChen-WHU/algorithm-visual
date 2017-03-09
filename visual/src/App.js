@@ -29,11 +29,8 @@ class App extends Component {
     };
   }
 
-  handlerSidebarClick = (e) => {
-    var content = e.target.innerHTML;
-    if (Object.keys(this.algorithms).some((catalog) => this.algorithms[catalog].indexOf(content) > -1)) {
-      this.setState({current: content});
-    }
+  onAlgChange = (alg) => {
+    this.setState({current: alg});
   }
 
   render() {
@@ -42,8 +39,8 @@ class App extends Component {
         <div className="App-header">
           <h2>Algorithm Visual</h2>
         </div>
-        <div className="App-body" onClick={this.handlerSidebarClick}>
-          <Sidebar items={this.algorithms}/>
+        <div className="App-body">
+          <Sidebar items={this.algorithms} onAlgChange={this.onAlgChange}/>
           <Main current={this.state.current}/>
         </div>
       </div>

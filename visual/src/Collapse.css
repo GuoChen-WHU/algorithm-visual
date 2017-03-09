@@ -1,5 +1,4 @@
 .Collapse {
-  position: relative;
   overflow: hidden;
 }
 
@@ -17,13 +16,13 @@
   content: '+';
 }
 
-.items {
+.content {
   max-height: 250px;
-  padding-left: 10px;
+  padding-left: 20px;
   /* hack: can not apply transition on height: auto, use max-height instead */
   transition: max-height .5s ease-in-out;
 }
 
-.collapsed .items {
+.collapsed .content {
   max-height: 0;
 }

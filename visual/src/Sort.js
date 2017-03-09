@@ -83,11 +83,13 @@ class Sort extends Component {
     return (
       <div className="Sort">
         <input type="text" value={this.state.nums.join(' ')} onChange={this.handleInput} />
-        <button type="button" onClick={this.handleRandom}>Random</button>
-        <button type="button" onClick={this.handleStart}>Start</button>
-        <button type="button" onClick={this.handlePause}>Pause</button>
-        <button type="button" onClick={this.handleResume}>Resume</button>
-        <button type="button" onClick={this.handleStop}>Stop</button>
+        <div className="controls">
+          <button type="button" onClick={this.handleRandom}>Random</button>
+          <button type="button" onClick={this.handleStart}>Start</button>
+          <button type="button" onClick={this.handlePause}>Pause</button>
+          <button type="button" onClick={this.handleResume}>Resume</button>
+          <button type="button" onClick={this.handleStop}>Stop</button>
+        </div>
         <div className="container">
           {this.state.nums.map((num, index) => {
             // For merge sort, current is a array.
