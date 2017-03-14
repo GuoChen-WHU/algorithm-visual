@@ -1,0 +1,32 @@
+.Controls {
+  margin: 10px;
+  text-align: center;
+}
+
+.Controls section {
+  margin-bottom: 10px;
+}
+
+.Controls input {
+  width: 80%;
+  font-size: 16px;
+  line-height: 2;
+  text-align: center;
+  border: none;
+  border-bottom: 1px solid #aaa;
+  outline: 0;
+}
+
+.Controls button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #337ab7;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.Controls button:hover {
+  background-color: #286090;
+}

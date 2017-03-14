@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './Heap.css';
-import alg from '../../core/algorithm';
-import animation from './util/animation.js';
-
+import alg from '../../../core/algorithm';
+import animation from '../util/animation.js';
+import Controls from './Controls.js';
 import Node from './Node';
 
 class Heap extends Component {
@@ -32,7 +32,11 @@ class Heap extends Component {
     this.setState(frame);
   }
 
-  onStart = () => {
+  changeNums = (nums) => {
+    this.setState({nums: nums});
+  }
+
+  setupFrames = () => {
     var heap = new alg.Heap(this.state.nums.concat()),
         cb = function(current, target, result) {
           if (result == null)
@@ -42,7 +46,10 @@ class Heap extends Component {
         };
     heap.maxHeapify(0, cb);
     animation.addFrame({current: null, target: null});
-    animation.start();
+  }
+
+  reset = () => {
+    this.setState({current: null, target: null});
   }
 
   render() {
@@ -63,12 +70,16 @@ class Heap extends Component {
 
     return (
       <div className="Heap">
-      <button type="button" onClick={this.onStart}>开始</button>
-      {rows.map((row, index) => (
-        <div key={index} className="floor">
-          {row}
-        </div>
-      ))}
+        <Controls
+          nums={this.state.nums}
+          changeNums={this.changeNums}
+          setupFrames={this.setupFrames}
+          reset={this.reset}/>
+        {rows.map((row, index) => (
+          <div key={index} className="floor">
+            {row}
+          </div>
+        ))}
       </div>
     );
   }

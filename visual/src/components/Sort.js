@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './Sort.css';
-import alg from '../../core/algorithm.js';
-import animation from './util/animation.js';
+import alg from '../../../core/algorithm.js';
+import animation from '../util/animation.js';
+import Controls from './Controls.js';
 
 class Sort extends Component {
   constructor (props) {
@@ -22,30 +23,13 @@ class Sort extends Component {
     this.setState(frame);
   }
 
-  handleInput = (event) => {
-    var nums = event.target.value.split(' ');
+  changeNums = (nums) => {
     this.setState({nums: nums});
   }
 
-  handleRandom = (event) => {
-    const minNum = 8,
-          maxNum = 16,
-          minVal = 5,
-          maxVal = 50;
-
-    var num = Math.round(minNum + Math.random() * (maxNum - minNum)),
-        result = [],
-        i;
-
-    for (i = 0; i < num; i++) {
-      result.push(Math.round(minVal + Math.random() * (maxVal - minVal)));
-    }
-
-    this.setState({nums: result});
-  }
-
-  handleStart = (event) => {
+  setupFrames = () => {
     var seqs = [],
+        // ensure nums are numbers
         nums = this.state.nums.map((num) => parseInt(num, 10)),
         cb = function (...args) {seqs.push(args)};
 
@@ -55,33 +39,20 @@ class Sort extends Component {
       animation.addFrame({nums: seq[2], current: seq[1]});
     });
     animation.addFrame({current: null, target: null});
-    animation.loop();
   }
 
-  handlePause = (event) => {
-    animation.pause();
-  }
-
-  handleResume = (event) => {
-    animation.start();
-  }
-
-  handleStop = (event) => {
-    animation.stop();
+  reset = () => {
     this.setState({current: null, target: null});
   }
 
   render () {
     return (
       <div className="Sort">
-        <input type="text" value={this.state.nums.join(' ')} onChange={this.handleInput} />
-        <div className="controls">
-          <button type="button" onClick={this.handleRandom}>Random</button>
-          <button type="button" onClick={this.handleStart}>Start</button>
-          <button type="button" onClick={this.handlePause}>Pause</button>
-          <button type="button" onClick={this.handleResume}>Resume</button>
-          <button type="button" onClick={this.handleStop}>Stop</button>
-        </div>
+        <Controls
+          nums={this.state.nums}
+          changeNums={this.changeNums}
+          setupFrames={this.setupFrames}
+          reset={this.reset}/>
         <div className="container">
           {this.state.nums.map((num, index) => {
             // For merge sort, current is a array.

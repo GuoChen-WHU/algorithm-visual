@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
-import Sort from './Sort.js';
-import Heap from './Heap.js';
+import Sort from '../components/Sort.js';
+import Heap from '../components/Heap.js';
 import './Main.css';
 
 const Main = ({ current }) => {

@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import './Sidebar.css';
-import Collapse from './Collapse.js';
+import Collapse from '../components/Collapse.js';
 
 const Sidebar = ({ items, onAlgChange }) => (
   <div className="Sidebar">
