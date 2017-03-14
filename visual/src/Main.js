@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Sort from './Sort.js';
+import Heap from './Heap.js';
 import './Main.css';
 
 const Main = ({ current }) => {
@@ -31,6 +32,9 @@ const Main = ({ current }) => {
       break;
     case 'bucket sort':
       stage = <Sort type="bucket"/>;
+      break;
+    case 'heapify':
+      stage = <Heap/>;
       break;
     default:
       stage = null;

@@ -337,16 +337,21 @@
     return i <= 0 ? undefined : Math.floor((i - 1 )/ 2);
   };
 
-  Heap.prototype.maxHeapify = function (i) {
+  Heap.prototype.maxHeapify = function (i, cb) {
+    cb = cb || function () {};
+
     var left = this.leftChild(i),
         right = this.rightChild(i),
         largest = i;
 
+    cb(i);
     if (this.elements[left] > this.elements[i]) largest = left;
     if (this.elements[right] > this.elements[largest]) largest = right;
     if (largest !== i) {
+      cb(i, largest);
       swap(this.elements, largest, i);
-      this.maxHeapify(largest);
+      cb(largest, i, this.elements.concat());
+      this.maxHeapify(largest, cb);
     }
   };
 

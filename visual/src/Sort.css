@@ -57,7 +57,7 @@
   background-color: #0f0;
 }
 
-.target:after {
+.item.target:after {
   position: absolute;
   left: 25%;
   top: 100%;

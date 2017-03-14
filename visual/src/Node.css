@@ -1,0 +1,15 @@
+.Node {
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  border: 1px solid #f00;
+  border-radius: 20px;
+}
+
+.Node.current {
+  background-color: #f00;
+}
+
+.Node.target {
+  background-color: #0f0;
+}
