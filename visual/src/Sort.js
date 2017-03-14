@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Sort.css';
 import alg from '../../core/algorithm.js';
+import animation from './util/animation.js';
 
 class Sort extends Component {
   constructor (props) {
@@ -11,9 +12,14 @@ class Sort extends Component {
       target: null,
       step: null // step of shell sort
     };
-    this.timer = null;
-    this.queue = [];
-    this.duration = 500;
+  }
+
+  componentWillMount() {
+    animation.setup(this.setFrame);
+  }
+
+  setFrame = (frame) => {
+    this.setState(frame);
   }
 
   handleInput = (event) => {
@@ -45,38 +51,24 @@ class Sort extends Component {
 
     alg.sort[this.props.type](nums, cb);
     seqs.forEach((seq) => {
-      this.addFrame({current: seq[0], target: seq[1], step: seq[3]});
-      this.addFrame({nums: seq[2], current: seq[1]});
+      animation.addFrame({current: seq[0], target: seq[1], step: seq[3]});
+      animation.addFrame({nums: seq[2], current: seq[1]});
     });
-    this.loop();
+    animation.addFrame({current: null, target: null});
+    animation.loop();
   }
 
   handlePause = (event) => {
-    clearTimeout(this.timer);
+    animation.pause();
   }
 
   handleResume = (event) => {
-    this.loop();
+    animation.start();
   }
 
   handleStop = (event) => {
-    clearTimeout(this.timer);
+    animation.stop();
     this.setState({current: null, target: null});
-    this.queue = [];
-  }
-
-  addFrame = (frame) => {
-    this.queue.push(frame);
-  }
-
-  loop = () => {
-    var frame = this.queue.shift();
-    if (frame) {
-      this.setState(frame);
-      this.timer = setTimeout(this.loop, this.duration);
-    } else {
-      this.setState({current: null, target: null});
-    }
   }
 
   render () {
