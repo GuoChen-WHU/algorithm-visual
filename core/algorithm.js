@@ -7,11 +7,43 @@
   // Util
   // --------------------
 
-  function swap (array, i, j) {
+  var swap = function (array, i, j) {
     var temp = array[i];
     array[i] = array[j];
     array[j] = temp;
-  }
+  };
+
+  var isArray = Array.isArray || function (obj) {
+    return Object.prototype.toString.call(array) === '[object Array]';
+  };
+
+  // Validate user input
+  var validate = function (method, options) {
+    options || (options = validate.defaultOptions);
+    return function () {
+      var i, obj;
+      for (i = 0; i < options.num; i++) {
+        obj = arguments[i];
+        if (!validate[options.type + 'Validator'](obj))
+          throw Error('Inputs [' + i + '] should be a non-empty ' + options.type);
+      }
+      return method.apply(options.context, [].slice.call(arguments));
+    };
+  };
+
+  validate.defaultOptions = {
+    type: 'array',
+    num: '1',
+    context: null
+  };
+
+  validate.arrayValidator = function (obj) {
+    return isArray(obj) && obj.length > 0;
+  };
+
+  validate.stringValidator = function (obj) {
+    return typeof obj === 'string' && obj.length > 0;
+  };
 
   // Sort
   // --------------------
@@ -20,9 +52,7 @@
 
   var sort = {};
 
-  sort.insert = function (array, cb, step) {
-    if (!array.length) return;
-
+  sort.insert = validate(function (array, cb, step) {
     cb = cb || function () {};
 
     step = step || 1;
@@ -40,11 +70,9 @@
       array[j + step] = key;
       cb(i, j + step, array.concat(), step);
     }
-  };
+  });
 
-  sort.shell = function (array, cb) {
-    if (!array.length) return;
-
+  sort.shell = validate(function (array, cb) {
     cb = cb || function () {};
 
     var step = array.length;
@@ -53,18 +81,16 @@
     while (step = Math.floor(step / 2)) {
       sort.insert(array, cb, step);
     }
-  };
+  });
 
-  sort.merge = function (array, cb) {
-    if (!array.length) return;
-
+  sort.merge = validate(function (array, cb) {
     cb = cb || function () {};
 
     var p = 0,
         r = array.length - 1;
 
     mergeSort(array, p, r, cb);
-  };
+  });
 
   function mergeSort (array, p, r, cb) {
     if (p < r) {
@@ -123,9 +149,7 @@
     return temp;
   }
 
-  sort.bubble = function (array, cb) {
-    if (!array.length) return;
-
+  sort.bubble = validate(function (array, cb) {
     cb = cb || function () {};
 
     var len = array.length,
@@ -143,11 +167,9 @@
         }
       }
     }
-  };
+  });
 
-  sort.select = function (array, cb) {
-    if (!array.length) return;
-
+  sort.select = validate(function (array, cb) {
     cb = cb || function () {};
 
     var len = array.length,
@@ -168,18 +190,16 @@
       cb(minIdx, i, array.concat());
       min = Infinity;
     }
-  };
+  });
 
-  sort.quick = function (array, cb) {
-    if (!array.length) return;
-
+  sort.quick = validate(function (array, cb) {
     cb = cb || function () {};
 
     var p = 0,
         r = array.length - 1;
 
     quickSort(array, p, r, cb);
-  };
+  });
 
   function quickSort (array, p, r, cb) {
     if (p < r) {
@@ -221,8 +241,8 @@
    * @param {Array} radix Origin array for radix sort.
    *
    */
-  sort.count = function (array, cb, radix) {
-    if (!array.length || Math.min.apply(null, array) < 0) return;
+  sort.count = validate(function (array, cb, radix) {
+    if (Math.min.apply(null, array) < 0) return;
 
     cb = cb || function () {};
 
@@ -250,10 +270,10 @@
     for (i = len - 1; i >= 0; i--) {
       radix ? (radix[i] = result[i]) : (array[i] = result[i]);
     }
-  };
+  });
 
-  sort.radix = function (array, cb) {
-    if (!array.length || Math.min.apply(null, array) < 0) return;
+  sort.radix = validate(function (array, cb) {
+    if (Math.min.apply(null, array) < 0) return;
 
     cb = cb || function () {};
 
@@ -267,7 +287,7 @@
       sort.count(digs, cb, array);
     }
 
-  };
+  });
 
   /**
    * Get kth digit of nums (from right to left)
@@ -285,9 +305,7 @@
     return ret;
   }
 
-  sort.bucket = function (array, cb) {
-    if (!array.length) return;
-
+  sort.bucket = validate(function (array, cb) {
     cb = cb || function () {};
 
     var len = array.length,
@@ -306,13 +324,15 @@
       buckets[Math.floor((array[i] - min) / size)].push(array[i]);
     }
     for (i = 0; i < len; i++) {
-      sort.insert(buckets[i]);
-      result = result.concat(buckets[i]);
+      if (buckets[i].length > 0) {
+        sort.insert(buckets[i]);
+        result = result.concat(buckets[i]);
+      }
     }
     for (i = 0; i < len; i++) {
       array[i] = result[i];
     }
-  };
+  });
 
 
   // Heap
@@ -380,11 +400,11 @@
 
   // Select
   // ------------------
-  var randomSelect = function (array, i) {
+  var randomSelect = validate(function (array, i) {
     var p = 0,
         r = array.length - 1;
     return _randomSelect(array, p, r, i);
-  };
+  });
 
   var _randomSelect = function (array, p, r, i) {
     if (p === r) return array[p];
@@ -627,10 +647,122 @@
 
   };
 
+  // Dynamic Programming
+  // ------------------------
+
+  var DP = {};
+
+  DP.cutRod = validate(function (price) {
+    var len = price.length - 1,
+        res = new Array(len + 1),
+        fir = new Array(len + 1),
+        i,
+        j,
+        q;
+
+    res[0] = 0;
+    for (j = 1; j <= len; j++) {
+      q = -Infinity;
+      for (i = 1; i <= j; i++) {
+        if (q < price[i] + res[j - i]) {
+          q = price[i] + res[j - i];
+          fir[j] = i;
+        }
+      }
+      res[j] = q;
+    }
+
+    return function (len) {
+      var earning = res[len],
+          partions = '';
+      while (len > 0) {
+        partions += fir[len] + ' ';
+        len = len - fir[len];
+      }
+      return {
+        earning: earning,
+        partions: partions.slice(0, -1)
+      }
+    };
+  });
+
+  DP._LCSLength = function (x, y, consecutive) {
+    var m = x.length - 1,
+        n = y.length - 1,
+        c = new Array(m + 1);
+
+    for (var i = 0; i <= m; i++) {
+      c[i] = new Array(n + 1);
+      c[i][0] = 0;
+    }
+    for (var j = 1; j <= n; j++) {
+      c[0][j] = 0;
+    }
+    for (i = 1; i <= m; i++) {
+      for (j = 1; j <= n; j++) {
+        if (x[i] === y[j]) {
+          c[i][j] = c[i - 1][j - 1] + 1;
+          // in LCCS, record LCSS end position
+          if (consecutive) {
+            c.lx = i;
+            c.ly = j;
+          }
+        } else if (consecutive) {
+          c[i][j] = 0;
+        } else if (c[i - 1][j] >= c[i][j - 1]) {
+          c[i][j] = c[i - 1][j];
+        } else {
+          c[i][j] = c[i][j - 1];
+        }
+      }
+    }
+    return c;
+  };
+
+  DP._printLCS = function (c, x, i, j, res) {
+    if (i === 0 || j === 0) return;
+
+    if (c[i][j] === c[i - 1][j]) {
+      this._printLCS(c, x, i - 1, j, res);
+    } else if (c[i][j] === c[i][j - 1]) {
+      this._printLCS(c, x, i, j - 1, res);
+    } else {
+      this._printLCS(c, x, i - 1, j - 1, res);
+      res.push(x[i]);
+    }
+  };
+
+  DP._printLCCS = function (c, x, i, j, res) {
+    while (c[i][j]) {
+      res.unshift(x[i]);
+      i--;
+      j--;
+    }
+  };
+
+  DP.LCS = validate(function (x, y, consecutive) {
+    // ensure index start at 1
+    x = '$' + x;
+    y = '$' + y;
+
+    var counts = DP._LCSLength(x, y, consecutive),
+        res = [];
+
+    consecutive
+      ? DP._printLCCS(counts, x, counts.lx, counts.ly, res)
+      : DP._printLCS(counts, x, x.length - 1, y.length - 1, res);
+    return res.join('');
+  }, {
+    type: 'string',
+    num: 2,
+    context: null
+  });
+
   // exports
   exports.sort = sort;
   exports.Heap = Heap;
   exports.randomSelect = randomSelect;
   exports.BST = BST;
+  exports.DP = DP;
 
 }));

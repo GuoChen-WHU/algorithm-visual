@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  QUnit.module('sort');
+  QUnit.module('Sort');
 
   QUnit.test('insert sort', function (assert) {
     var nums = [7, 6, 2, 1, 5, 3];
