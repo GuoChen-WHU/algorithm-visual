@@ -33,7 +33,7 @@ class Sort extends Component {
         nums = this.state.nums.map((num) => parseInt(num, 10)),
         cb = function (...args) {seqs.push(args)};
 
-    alg.sort[this.props.type](nums, cb);
+    alg.sort[this.props.match.params.type](nums, cb);
     seqs.forEach((seq) => {
       animation.addFrame({current: seq[0], target: seq[1], step: seq[3]});
       animation.addFrame({nums: seq[2], current: seq[1]});
@@ -46,8 +46,12 @@ class Sort extends Component {
   }
 
   render () {
+    const type = this.props.match.params.type;
+    const title = type.replace(/^\w+?/, (letter) => letter.toUpperCase()) + ' Sort';
+
     return (
       <div className="Sort">
+        <h1>{title}</h1>
         <Controls
           nums={this.state.nums}
           changeNums={this.changeNums}
@@ -70,7 +74,7 @@ class Sort extends Component {
             );
           })}
         </div>
-        {this.props.type === 'shell' ? <p className="note">Current Step: {this.state.step}</p> : ''}
+        {type === 'shell' ? <p className="note">Current Step: {this.state.step}</p> : ''}
       </div>
     );
   }

@@ -70,6 +70,7 @@ class Heap extends Component {
 
     return (
       <div className="Heap">
+        <h1>{`Heap-${this.props.match.params.type}`}</h1>
         <Controls
           nums={this.state.nums}
           changeNums={this.changeNums}

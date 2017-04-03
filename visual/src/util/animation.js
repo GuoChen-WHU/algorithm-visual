@@ -1,4 +1,4 @@
-const DURATION = 1000;
+const DURATION = 500;
 
 var animation = {
   queue: [],

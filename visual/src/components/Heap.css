@@ -2,6 +2,10 @@
   overflow: hidden;
 }
 
+.Heap h1 {
+  text-align: center;
+}
+
 .floor {
   display: flex;
   justify-content: space-around;
