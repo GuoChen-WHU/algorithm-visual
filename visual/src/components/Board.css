@@ -1,0 +1,8 @@
+.Board {
+  position: fixed;
+  top: 60px;
+  right: 10px;
+  min-width: 320px;
+  opacity: 0.9;
+  z-index: 500;
+}

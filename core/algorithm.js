@@ -63,12 +63,16 @@
         key;
 
     for (i = step; i < len; i++) {
+      cb({target: -1});
+      cb({current: i});
       key = array[i];
+      cb({target: i - 1});
       for (j = i - step; j >= 0 && array[j] > key; j -= step) {
+        cb({target: j});
         array[j + step] = array[j];
       }
       array[j + step] = key;
-      cb(i, j + step, array.concat(), step);
+      cb({nums: array.concat()});
     }
   });
 
@@ -79,6 +83,7 @@
 
     // /2 ensure the last step be 1
     while (step = Math.floor(step / 2)) {
+      cb({message: 'Current step: ' + step});
       sort.insert(array, cb, step);
     }
   });
@@ -99,7 +104,8 @@
       mergeSort(array, q + 1, r, cb);
       merge(array, p, q, r);
 
-      cb(generateArray(p, r, 1), null, array.concat());
+      cb({current: generateArray(p, r, 1)});
+      cb({nums: array.concat()});
     }
   }
 
@@ -158,12 +164,14 @@
         temp;
 
     for (i = 0; i < len - 1; i++) {
+      cb({current: i});
       for (j = i + 1; j < len; j++) {
+        cb({target: j});
         if (array[j] < array[i]) {
           temp = array[i];
           array[i] = array[j];
           array[j] = temp;
-          cb(j, i, array.concat());
+          cb({nums: array.concat()});
         }
       }
     }
@@ -179,7 +187,9 @@
         j;
 
     for (i = 0; i < len; i++) {
+      cb({current: i});
       for (j = i; j < len; j++) {
+        cb({target: j});
         if (array[j] < min) {
           min = array[j];
           minIdx = j;
@@ -187,7 +197,8 @@
       }
       array[minIdx] = array[i];
       array[i] = min;
-      cb(minIdx, i, array.concat());
+      cb({target: minIdx});
+      cb({nums: array.concat()});
       min = Infinity;
     }
   });
@@ -220,6 +231,8 @@
 
     array[random] = array[r];
     array[r] = pivot;
+    cb({nums: array.concat()});
+    cb({target: r});
 
     for (i = p - 1, j = p; j < r; j++) {
       if (array[j] <= pivot) {
@@ -227,11 +240,15 @@
         temp = array[i];
         array[i] = array[j];
         array[j] = temp;
+        cb({nums: array.concat()});
+        cb({current: generateArray(p, i, 1)});
       }
     }
     array[r] = array[i + 1];
     array[i + 1] = pivot;
-    cb(random, i + 1, array.concat());
+    cb({nums: array.concat()});
+    cb({target: i + 1});
+    cb({current: -1});
     return i + 1;
   }
 
@@ -264,7 +281,8 @@
     }
     for (i = len - 1; i >= 0; i--) {
       result[count[array[i]] - 1] = radix ? radix[i] : array[i];
-      cb(i, count[array[i]] - 1, result.concat());
+      cb({current: i, target: count[array[i]] - 1});
+      cb({nums: result.concat()});
       count[array[i]]--;
     }
     for (i = len - 1; i >= 0; i--) {
@@ -284,6 +302,7 @@
 
     for (i = 0; i < d; i++) {
       digs = getDigitsAt(array, i);
+      cb({message: 'Sort by the ' + (i + 1) + 'th digit'});
       sort.count(digs, cb, array);
     }
 
@@ -322,16 +341,22 @@
     }
     for (i = 0; i < len; i++) {
       buckets[Math.floor((array[i] - min) / size)].push(array[i]);
+      cb({message: 'put ' + array[i] + ' into ' + i + 'th bucket'});
     }
     for (i = 0; i < len; i++) {
       if (buckets[i].length > 0) {
         sort.insert(buckets[i]);
+        cb({message: 'insert sort nums in ' + i + 'th bucket, got ' + buckets[i].join(',')});
         result = result.concat(buckets[i]);
       }
     }
     for (i = 0; i < len; i++) {
       array[i] = result[i];
     }
+    cb({
+      nums: array.concat(),
+      message: 'concat nums in buckets'
+    });
   });
 
 
@@ -364,39 +389,66 @@
         right = this.rightChild(i),
         largest = i;
 
-    cb(i);
+    cb({current: i});
     if (this.elements[left] > this.elements[i]) largest = left;
     if (this.elements[right] > this.elements[largest]) largest = right;
     if (largest !== i) {
-      cb(i, largest);
+      cb({target: largest});
       swap(this.elements, largest, i);
-      cb(largest, i, this.elements.concat());
+      cb({current: largest, target: i, nums: this.elements.concat()});
+      cb({target: -1});
       this.maxHeapify(largest, cb);
     }
   };
 
-  Heap.prototype.buildMaxHeap = function () {
+  Heap.prototype.buildMaxHeap = function (cb) {
     var size = this.size(),
         i = Math.floor((size - 2) / 2);
 
     for (; i >= 0; i--) {
-      this.maxHeapify(i);
+      this.maxHeapify(i, cb);
     }
   };
 
-  Heap.prototype.heapSort = function () {
+  Heap.prototype.heapSort = function (cb) {
     var result = [],
         i = this.size() - 1;
-    this.buildMaxHeap();
+    this.buildMaxHeap(cb);
 
+    cb({
+      nums: this.elements.concat(),
+      message: 'Now we have built a max heap'
+    });
     for (; i > 0; i--) {
       swap(this.elements, 0, i);
+      cb({nums: this.elements.concat()});
       result.unshift(this.elements.pop());
-      this.maxHeapify(0);
+      cb({
+        nums: this.elements.concat(),
+        message: 'Current result: ' + result.join(',')
+      });
+      this.maxHeapify(0, cb);
     }
     result.unshift(this.elements[0]);
+    cb({message: 'Got the sort result: ' + result.join(',')});
     this.elements = result;
   };
+
+  // 算法可视化应用适配器
+  exports.heap = {
+    heapify: function (nums, cb) {
+      var heap = new Heap(nums);
+      heap.maxHeapify(0, cb);
+    },
+    build: function (nums, cb) {
+      var heap = new Heap(nums);
+      heap.buildMaxHeap(cb);
+    },
+    sort: function (nums, cb) {
+      var heap = new Heap(nums);
+      heap.heapSort(cb);
+    }
+  }
 
   // Select
   // ------------------
@@ -758,11 +810,66 @@
     context: null
   });
 
+
+  // Algorithms about string
+  var KMP = validate(function (str, p) {
+    // ensure index start at 1
+    str = '$' + str;
+    p = '$' + p;
+
+    var n = str.length - 1,
+        m = p.length - 1,
+        q = 0,
+        i,
+        res = [],
+        pi;
+
+    pi = _computePrefix(p);
+    for (i = 1; i <= n; i++) {
+      while (q > 0 && p[q + 1] !== str[i]) {
+        q = pi[q];
+      }
+      if (p[q + 1] === str[i]) {
+        q = q + 1;
+      }
+      if (q === m) {
+        res.push(i - m);
+        q = pi[q];
+      }
+    }
+    return res;
+  }, {
+    type: 'string',
+    num: 2,
+    context: null
+  });
+
+  var _computePrefix = function (p) {
+    var m = p.length - 1,
+        pi = new Array(m + 1),
+        k = 0,
+        q;
+
+    pi[1] = 0;
+    for (q = 2; q <= m; q++) {
+      while (k > 0 && p[k + 1] !== p[q]) {
+        k = pi[k];
+      }
+      if (p[k + 1] === p[q]) {
+        k = k + 1;
+      }
+      pi[q] = k;
+    }
+    return pi;
+  };
+
+
   // exports
   exports.sort = sort;
   exports.Heap = Heap;
   exports.randomSelect = randomSelect;
   exports.BST = BST;
   exports.DP = DP;
+  exports.KMP = KMP;
 
 }));

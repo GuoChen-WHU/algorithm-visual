@@ -14,3 +14,7 @@
 .Node.target {
   background-color: #0f0;
 }
+
+.placeholder {
+  border: none;
+}

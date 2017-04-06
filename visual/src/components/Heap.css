@@ -1,8 +1,9 @@
 .Heap {
-  overflow: hidden;
+  min-height: 300px;
 }
 
 .Heap h1 {
+  margin-bottom: 30px;
   text-align: center;
 }
 

@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import './Node.css';
 
-const Node = ({ value, isCurrent, isTarget }) => {
+const Node = ({ value, isCurrent, isTarget, isPlaceholder }) => {
   var className = 'Node' +
                   (isCurrent ? ' current' : '') +
-                  (isTarget ? ' target' : '');
+                  (isTarget ? ' target' : '') +
+                  (isPlaceholder ? ' placeholder' : '');
   return (
     <div className={className}>{value}</div>
   );
@@ -12,10 +13,6 @@ const Node = ({ value, isCurrent, isTarget }) => {
 
 Node.propTypes = {
   value: PropTypes.number
-};
-
-Node.defaultProps = {
-  value: 0
 };
 
 export default Node;
