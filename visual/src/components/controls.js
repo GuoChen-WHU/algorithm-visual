@@ -56,7 +56,7 @@ class Controls extends Component {
   }
 
   onResume = () => {
-    this.onStart();
+    this.loop();
   }
 
   onStop = () => {
@@ -67,7 +67,7 @@ class Controls extends Component {
   }
 
   setupFrames = () => {
-        // ensure nums are numbers
+    // ensure nums are numbers
     let nums = this.props.nums.map((num) => parseInt(num, 10));
     const cb = this.addFrame;
 
@@ -102,12 +102,22 @@ class Controls extends Component {
         <section>
           <input type="text" value={this.props.nums.join(' ')} onChange={this.onInputChange} />
         </section>
-        <section>
-          <button type="button" onClick={this.onRandom}>Random</button>
-          <button type="button" onClick={this.onStart}>Start</button>
-          <button type="button" onClick={this.onPause}>Pause</button>
-          <button type="button" onClick={this.onResume}>Resume</button>
-          <button type="button" onClick={this.onStop}>Stop</button>
+        <section className="btn-group btn-group-justified">
+          <div className="btn-group">
+            <button type="button" className="btn btn-default" onClick={this.onRandom}>Random</button>
+          </div>
+          <div className="btn-group">
+            <button type="button" className="btn btn-default" onClick={this.onStart}>Start</button>
+          </div>
+          <div className="btn-group">
+            <button type="button" className="btn btn-default" onClick={this.onPause}>Pause</button>
+          </div>
+          <div className="btn-group">
+            <button type="button" className="btn btn-default" onClick={this.onResume}>Resume</button>
+          </div>
+          <div className="btn-group">
+            <button type="button" className="btn btn-default" onClick={this.onStop}>Stop</button>
+          </div>
         </section>
       </div>
     );

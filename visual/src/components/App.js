@@ -10,13 +10,13 @@ const App = () => (
   <div>
     <Navbar />
 
-    <Board />
-
     <Redirect to="/sort/insert" />
     <Route path="/sort/:type" component={Sort} />
     <Route path="/heap/:type" component={Heap} />
 
     <Controls />
+
+    <Board />
   </div>
 );
 

@@ -4,6 +4,14 @@ import { Link } from 'react-router-dom';
 const Navbar = () => (
   <nav className="navbar navbar-default">
     <div className="container-fluid">
+      <div className="navbar-header">
+        <button type="button" className="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+          <span className="icon-bar"></span>
+        </button>
+        <a className="navbar-brand" href="#">Algorithm Visual</a>
+      </div>
       <div className="collapse navbar-collapse">
         <ul className="nav navbar-nav">
           <li className="dropdown">
