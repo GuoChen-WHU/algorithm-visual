@@ -15,11 +15,15 @@ const mapRouteToAlg = (location) => {
   return category && type && alg[category][type];
 };
 
+const DURATION = 500;
+
 class Controls extends Component {
   constructor(props) {
     super(props);
+    this.runner = Promise.resolve();
+    this.isPaused = true;
+    // used to stop animation
     this.timer = null;
-    this.frames = [];
   }
 
   onInputChange = (event) => {
@@ -28,7 +32,7 @@ class Controls extends Component {
   }
 
   onRandom = () => {
-    this.frames.length && this.onStop();
+    this.isPaused || this.onStop();
     const minNum = 8,
           maxNum = 16,
           minVal = 5,
@@ -46,49 +50,57 @@ class Controls extends Component {
   }
 
   onStart = () => {
-    this.frames.length && this.onStop();
-    this.setupFrames();
-    this.loop();
-  }
-
-  onPause = () => {
-    clearTimeout(this.timer);
-  }
-
-  onResume = () => {
-    this.loop();
-  }
-
-  onStop = () => {
-    this.frames = [];
-    clearTimeout(this.timer);
-    this.props.changeCurrent(-1);
-    this.props.changeTarget(-1);
-  }
-
-  setupFrames = () => {
+    if (!this.isPaused) return;
+    this.isPaused = false;
     // ensure nums are numbers
     let nums = this.props.nums.map((num) => parseInt(num, 10));
-    const cb = this.addFrame;
-
     const algorithm = mapRouteToAlg(this.props.location.pathname);
-    algorithm(nums, cb);
+    algorithm(nums, this.addFrame);
 
+    // reset current and target
     this.addFrame({current: -1, target: -1});
   }
 
-  addFrame = (frame) => {
-    this.frames.push(frame);
+  onPause = () => {
+    this.isPaused = true;
   }
 
-  loop = () => {
-    const frame = this.frames.shift();
-    if (frame) {
-      this.setFrame(frame);
-      this.timer = setTimeout(this.loop, 500);
-    }
+  onResume = () => {
+    this.isPaused = false;
+    this.resumeCall && this.resumeCall();
   }
 
+  onStop = () => {
+    this.isPaused = true;
+    this.runner = Promise.resolve();
+    clearTimeout(this.timer);
+    this.setFrame({current: -1, target: -1});
+  }
+
+  /**
+   * Add a promise for setting frame to the promise chain
+   */
+  addFrame = frame => this.runner = this.runner.then(() =>
+    new Promise(resolve => {
+      // resolve the promise to move on if not paused
+      if (!this.isPaused) {
+        this.timer = setTimeout(() => {
+          this.setFrame(frame);
+          resolve();
+        }, DURATION);
+      // set a callback for resolve later
+      } else {
+        this.resumeCall = () => {
+          this.setFrame(frame);
+          resolve();
+        };
+      }
+    })
+  )
+
+  /**
+   * Dispatch actions
+   */
   setFrame = (frame) => {
     frame.nums && this.props.changeNums(frame.nums);
     frame.current != null && this.props.changeCurrent(frame.current);
